@@ -1,2 +1,25 @@
 # Spam-Emails
-[Data](https://www.kaggle.com/yasserh/spamemailsdataset)
+
+EC 424
+**DUE DATE:** March 9, 2022
+
+**GOAL:** Use frequencies of different words and characters to predict spam emails
+
+[**DATA**](https://www.kaggle.com/yasserh/spamemailsdataset) (from Kaggle)
+
+**PROJECT REQUIREMENTS:**
+
+1. Separate 20% of data for testing
+2. Train 4 different algorithms, such as:
+      * linear regression
+      * logistic regression
+      * lasso regression
+      * random forest
+      * etc.
+3. Estimate the error using cross-validation
+4. Test the chosen model on the held-out data
+5. Create reports:
+      * Kaggle notebook (final version)
+      * 1-page executive summary
+      * 4-slide project summary
+      * Individual evaluations
