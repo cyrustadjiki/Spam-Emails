@@ -7,6 +7,7 @@ EC 424
 **GOAL:** Use frequencies of different words and characters to predict spam emails
 
 [**DATA**](https://www.kaggle.com/yasserh/spamemailsdataset) (from Kaggle)
+[**MORE DATA**](https://www.kaggle.com/venky73/spam-mails-dataset) (from Kaggle)
 
 **PROJECT REQUIREMENTS:**
 
