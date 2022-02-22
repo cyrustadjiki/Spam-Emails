@@ -56,6 +56,9 @@ email_corpus <- VCorpus(
 # Using `tm` package to stem email content
 email_corpus <- tm::tm_map( email_corpus, 
                             tm::stemDocument )
+# Removing puctuations
+email_corpus = tm_map( email_corpus, 
+                       removePunctuation )
 
 # Removing stopwords
 email_corpus <- tm_map( email_corpus, 
@@ -63,7 +66,7 @@ email_corpus <- tm_map( email_corpus,
 
 # OPTIONAL -- Removing two most frequent stopwords: "NUMBER", "URL"
 # email_corpus <- tm_map( email_corpus, 
-#                        removeWords, c("NUMBER", "url", "urI", "URL") )
+#                        removeWords, c("NUMBER", "url", "URL") )
 
 # OPTIONAL -- Removing extra white space
 # email_corpus <- tm_map( email_corpus,
@@ -125,29 +128,56 @@ wordcloud( ham$text,
 
 
 ##############################################################################
-# SPLITS
+# SPLITTING
 ##############################################################################
 
 
 
 # Data is sorted randomly, so it's easy to split Testing vs. Training
-email_dtm_train <- email_dtm[   1:2400, ]   # 80% training
-email_dtm_test  <- email_dtm[2400:3000, ]   # 20% testing
+email_dtm_train <- email_dtm[   1:2400, ]         # 80% training
+email_dtm_test  <- email_dtm[2400:3000, ]         # 20% testing
 
 # Adding labels for convenience
 email_train_label <- email_df[   1:2400, ]$label
 email_test_label  <- email_df[2400:3000, ]$label
 
-# checking that data is split proportionally
-prop.table( table( email_train_label ) )
+### checking that data is split proportionally
+## prop.table( table( email_train_label ) )
 #         0         1 
 #      0.83      0.17 
-prop.table( table( email_test_label ) )
+#
+## prop.table( table( email_test_label ) )
 #         0         1 
 # 0.8469218 0.1530782 
 
 
 
+##############################################################################
+# TRIMMING: reducing number of features | currently 25,050 (too many!)
+##############################################################################
+
+
+
+# Defining threshold (eg. 1 == 1%)
+# Goal: Eliminate words that appear in __% of records in the training data
+min_freq <- round( 
+                email_dtm$nrow * ( ( threshold = 0.8 ) / 100 ),     # using 0.8%
+                0 
+              ) 
+
+# Create vector of most frequent words
+freq_words <- findFreqTerms( x = email_dtm, 
+                             lowfreq = min_freq )
+
+# Filter the DTM
+email_dtm_freq_train <- email_dtm_train[ , freq_words]
+email_dtm_freq_test  <- email_dtm_test[ , freq_words]
+
+
+
+##############################################################################
+# 
+##############################################################################
 
 
 
@@ -159,22 +189,9 @@ prop.table( table( email_test_label ) )
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+##############################################################################
+# 
+##############################################################################
 
 
 
