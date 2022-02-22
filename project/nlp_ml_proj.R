@@ -22,6 +22,10 @@ p_load( fastverse, magrittr, here, skimr, dplyr, ggplot2, ggthemes, equatiomatic
 # Loading email dataset: consists of "text data" and "dummy variable"
 email_df <- data.table::fread( "spam_or_not_spam.csv", header = T )
 
+# Randomizing data
+set.seed(46234)
+email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
+
 # Factoring dummy variable
 email_df$label <- factor( email_df$label )
 
@@ -66,7 +70,7 @@ email_corpus <- tm_map( email_corpus,
 #                         stringr::str_squish)
 
 # DocumentTermMatrix(): tokenize the email corpus.
-email_dtm <- tm::DocumentTermMatrix(email_corpus)
+email_dtm <- tm::DocumentTermMatrix( sample( email_corpus, length( email_corpus ) ) )
 
 
 
@@ -120,20 +124,27 @@ wordcloud( ham$text,
 
 
 
-
 ##############################################################################
 # SPLITS
 ##############################################################################
 
 
 
+# Data is sorted randomly, so it's easy to split Testing vs. Training
+email_dtm_train <- email_dtm[   1:2400, ]   # 80% training
+email_dtm_test  <- email_dtm[2400:3000, ]   # 20% testing
 
+# Adding labels for convenience
+email_train_label <- email_df[   1:2400, ]$label
+email_test_label  <- email_df[2400:3000, ]$label
 
-
-
-
-
-
+# checking that data is split proportionally
+prop.table( table( email_train_label ) )
+#         0         1 
+#      0.83      0.17 
+prop.table( table( email_test_label ) )
+#         0         1 
+# 0.8469218 0.1530782 
 
 
 
