@@ -176,36 +176,53 @@ email_dtm_freq_test  <- email_dtm_test[ , freq_words]
 
 
 ##############################################################################
-# 
+# Final, cleaned, prepared dataset for Naive Bayes
 ##############################################################################
 
 
 
+# Simple dummy transformation fn.
+convert_values <- function(x){
+                    x = ifelse( x > 0, "Yes", "No" )
+                  }
 
+# Declaring final `train` and `test` datasets
+email_train <- apply( email_dtm_freq_train, MARGIN = 2,
+                      convert_values )
 
-
-
-
+email_test  <- apply( email_dtm_freq_test, MARGIN = 2,
+                      convert_values )
 
 
 
 ##############################################################################
-# 
+# Running Bayes Classifier from e1071 package
 ##############################################################################
 
 
 
+#Create model from the training dataset
+bayes_classifier <- e1071::naiveBayes( email_train, 
+                                       email_train_label )
 
 
 
+##############################################################################
+# Evaluating Performance
+##############################################################################
+
+
+# Predicting on test data
+email_test_pred <- predict( bayes_classifier, 
+                            email_test )
 
 
 
-
-
-
-
-
+# Creating confusion matrix
+confusionMatrix( data = email_test_pred, 
+                 reference = email_test_label,
+                 positive = "1", 
+                 dnn = c("Prediction", "Actual") )
 
 
 
