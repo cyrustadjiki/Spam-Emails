@@ -8,7 +8,7 @@ library( pacman )
 p_load( fastverse, magrittr, here, skimr, dplyr, ggplot2, ggthemes, equatiomatic,
         gridExtra, caret, naivebayes, knitr, kableExtra, shiny, data.table, 
         tidymodels, ggthemes, wordcloud, tm, SnowballC, RColorBrewer, e1071,
-        data.table, stringr
+        data.table, stringr, disk.frame, knitr
         )
 
 
@@ -161,7 +161,7 @@ email_test_label  <- email_df[2400:3000, ]$label
 # Defining threshold (eg. 1 == 1%)
 # Goal: Eliminate words that appear in __% of records in the training data
 min_freq <- round( 
-                email_dtm$nrow * ( ( threshold = 0.8 ) / 100 ),     # using 0.8%
+                email_dtm$nrow * ( ( threshold = 1.18 ) / 100 ),     # using 0.8%
                 0 
               ) 
 
@@ -195,6 +195,18 @@ email_test  <- apply( email_dtm_freq_test, MARGIN = 2,
 
 
 
+##############################################################################
+# Dropping extra variables
+##############################################################################
+
+
+rm(email_dtm_freq_train); 
+rm(email_dtm_freq_test);
+rm(email_dtm_train);
+rm(email_dtm_test);
+rm(reverse_email);
+rm(email_dtm);
+rm(email_corpus)
 
 
 

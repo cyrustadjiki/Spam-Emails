@@ -21,6 +21,9 @@ write.csv(email_train, "test.csv")
 # 
 email_train <- fread("test.csv") %>% data.frame()
 
+# 0 and 1 for dummy instead of 1 and 2
+email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
+
 # Splitting for 5-fold cross-validation
 folds <- email_train %>% vfold_cv(v = 5)
 
@@ -31,8 +34,11 @@ lambdas <- data.frame( penalty = c( 0, 10^seq( from = 5, to = -2, length = 100 )
 data_recipe <- recipe(
                 email_train_label ~ ., 
                 data = email_train 
-              ) %>% 
-              update_role(V1, new_role = 'id variable')
+                ) %>% 
+              update_role(V1, new_role = 'id variable') %>%
+              step_dummy(all_nominal()) %>%
+              step_zv(all_predictors()) %>%
+              step_normalize(all_predictors())
 
 # Defining Lasso Model
 lasso <- linear_reg(

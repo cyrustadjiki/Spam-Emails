@@ -1,5 +1,6 @@
 # Running data cleaning and prep
 source("nlp_ml_proj.R")
+gc()
 
 ##############################################################################
 # Running Bayes Classifier from e1071 package
@@ -63,23 +64,6 @@ confusionMatrix( data = email_test_pred,
 #        Balanced Accuracy : 0.49259         
 #                                           
 #         'Positive' Class : 1    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
