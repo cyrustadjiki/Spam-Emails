@@ -24,6 +24,10 @@ email_train <- fread("test.csv") %>% data.frame()
 # 0 and 1 for dummy instead of 1 and 2
 email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
 
+# Subsetting the data: c( conftest, atol, afnumberdecor, apg )
+email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
+                                        eneen, cpp, enenkio, hermio, kio ) ) 
+
 # Splitting for 5-fold cross-validation
 folds <- email_train %>% vfold_cv(v = 5)
 
@@ -71,12 +75,29 @@ lasso_cv %>% collect_metrics() %>%
 
 
 
+##############################################################################
+# Visualizing Results | MAE
+##############################################################################
 
 
+# Filtering `lasso_cv` by mae 
+lasso_cv_results_mae <- lasso_cv %>% collect_metrics() %>% filter(.metric == "mae")
+
+# Visualizing results from `lasso_cv` MAE
+ggplot( lasso_cv_results_mae, aes( x = penalty, y = mean ) ) + geom_line(  ) + 
+  xlab("Lambda") + ylab("MAE") + theme_calc()  #+ geom_point(aes(x = best_lambda, y = min_mae))
 
 
+##############################################################################
+# Visualizing Results | RMSE
+##############################################################################
 
 
+lasso_cv_results_rmse <- lasso_cv %>% collect_metrics() %>% filter(.metric == "rmse")
+
+# Visualizing results from `lasso_cv` RMSE
+ggplot( lasso_cv_results_rmse, aes( x = penalty, y = mean ) ) + geom_line(  )  + 
+  xlab("Lambda") + ylab("RMSE") + theme_calc() + scale_x_log10() #+ geom_point(aes(x = best_lambda, y = min_rmse))
 
 
 
