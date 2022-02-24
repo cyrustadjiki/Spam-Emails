@@ -24,8 +24,17 @@ email_train <- fread("test.csv") %>% data.frame()
 email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
 
 # Subsetting the data: removing bad explanatory variables
-email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
-                                        eneen, cpp, enenkio, hermio, kio ) ) 
+email_train <- select( email_train, -c( 
+                                        # conftest, 
+                                        atol,
+                                        # afnumberdecor, 
+                                        # apg,
+                                        # eneen, 
+                                        # cpp, 
+                                        enenkio
+                                        # hermio, 
+                                        # kio 
+                                        ) )
 
 
 # Set seed
@@ -34,12 +43,20 @@ set.seed(9753)
 # Split for 5-fold cross-validation
 folds <- vfold_cv(email_train, v = 5)
 
+# converting outcome variable into character vector
+email_train <- email_train %>% 
+                        mutate(
+                          outcome_as_vector = ifelse(email_train_label == 1, "Yes", "No")
+                        ) 
+
 # Defining the recipe
 data_recipe <- recipe(
-                  email_train_label ~ ., 
+                  outcome_as_vector ~ ., 
                   data = email_train 
                     ) %>% 
+                  step_rm(email_train_label) %>% 
                   update_role(V1, new_role = 'id variable') %>%
+                  # step_num2factor( email_train_label ) %>% 
                   step_dummy(all_nominal()) %>%
                   step_zv(all_predictors()) %>%
                   step_normalize(all_predictors())
@@ -60,7 +77,7 @@ cv_logistic <- workflow_logistic %>%
                 fit_resamples(
                   resamples = folds,
                   metrics = metric_set(accuracy, roc_auc, sens, spec, precision)
-                ) %>% beepr::beep(sound = 3)
+                )
 
 # Visualizing output
 cv_logistic %>% collect_metrics() %>% 

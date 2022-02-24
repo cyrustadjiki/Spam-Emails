@@ -65,8 +65,8 @@ email_corpus <- tm_map( email_corpus,
                        removeWords, stopwords( "en" ) )
 
 # OPTIONAL -- Removing two most frequent stopwords: "NUMBER", "URL"
-# email_corpus <- tm_map( email_corpus, 
-#                        removeWords, c("NUMBER", "url", "URL") )
+email_corpus <- tm_map( email_corpus,
+                       removeWords, c("NUMBER", "number", "url", "URL") )
 
 # OPTIONAL -- Removing extra white space
 # email_corpus <- tm_map( email_corpus,
@@ -112,18 +112,20 @@ spam <- reverse_email %>% filter( type == 1 )
 wordcloud( spam$text, 
            max.words = 150, 
            colors = brewer.pal( 7, "Dark2" ), 
-           random.order = FALSE ) 
+           random.order = FALSE,
+           main = "Spam") 
 
 
 
-# Subsetting to spam == 1
+# Subsetting to spam == 0
 ham <- reverse_email %>% filter( type == 0 )
 
-# Visualing spam data
+# Visualing non-spam data
 wordcloud( ham$text, 
            max.words = 150, 
            colors = brewer.pal( 7, "Dark2" ), 
-           random.order = FALSE ) 
+           random.order = FALSE,
+           main = "Non-Spam") 
 
 
 
@@ -161,7 +163,7 @@ email_test_label  <- email_df[2400:3000, ]$label
 # Defining threshold (eg. 1 == 1%)
 # Goal: Eliminate words that appear in __% of records in the training data
 min_freq <- round( 
-                email_dtm$nrow * ( ( threshold = 1.18 ) / 100 ),     # using 0.8%
+                email_dtm$nrow * ( ( threshold = 1.18 ) / 100 ),     # using 5%
                 0 
               ) 
 

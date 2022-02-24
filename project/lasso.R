@@ -13,7 +13,8 @@ gc()
 options(scipen = 99999)
 
 # Adding spam vs ham to train data
-email_train <- cbind( email_train, email_train_label )
+email_train <- cbind( email_train, 
+                      email_train_label )
 
 #
 write.csv(email_train, "test.csv")
@@ -64,14 +65,15 @@ lasso_cv <- workflow_lasso %>%
               )
 
 # Find best models
-lasso_cv %>% collect_metrics() %>% 
-            head() %>%
-            kbl(caption = "Model Accuracy", format = 'html') %>%
-            kable_classic(
-              full_width = FALSE,
-              html_font = "Cambria",
-              font_size = 24
-            ) %>% beepr::beep(sound = 3)
+lasso_cv %>% collect_metrics() 
+            # %>% 
+            # head() %>%
+            # kbl(caption = "Model Accuracy", format = 'html') %>%
+            # kable_classic(
+            #   full_width = F,
+            #   html_font = "Cambria",
+            #   font_size = 24
+            # )
 
 
 
