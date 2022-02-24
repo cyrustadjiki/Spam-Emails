@@ -60,7 +60,7 @@ cv_logistic <- workflow_logistic %>%
                 fit_resamples(
                   resamples = folds,
                   metrics = metric_set(accuracy, roc_auc, sens, spec, precision)
-                )
+                ) %>% beepr::beep(sound = 3)
 
 # Visualizing output
 cv_logistic %>% collect_metrics() %>% 

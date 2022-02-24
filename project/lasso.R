@@ -68,10 +68,10 @@ lasso_cv %>% collect_metrics() %>%
             head() %>%
             kbl(caption = "Model Accuracy", format = 'html') %>%
             kable_classic(
-              full_width = F,
+              full_width = FALSE,
               html_font = "Cambria",
               font_size = 24
-            )
+            ) %>% beepr::beep(sound = 3)
 
 
 
