@@ -54,7 +54,7 @@ data_recipe <- recipe(
 lambdas <- data.frame( penalty = c( 0, 10^seq( from = 5, to = -2, length = 100 ) ) )
 
 # Defining Lasso Model
-lasso <- logistic_reg(
+log_lasso <- logistic_reg(
             mode = 'classification',
             penalty = tune(), 
             mixture = 1) %>% 
@@ -63,13 +63,13 @@ lasso <- logistic_reg(
 # Setting up workflow
 workflow_lasso <- workflow() %>%
                     add_recipe( data_recipe ) %>%
-                    add_model( lasso )
+                    add_model( log_lasso )
 
 # Parallelize 
 # doParallel::registerDoParallel(cores = 4)
 
 # CV
-lasso_cv <- workflow_lasso %>% 
+log_lasso_cv <- workflow_lasso %>% 
                 tune_grid(
                   resamples = folds,
                   metrics = metric_set(accuracy, roc_auc, sens, spec, precision),
@@ -79,7 +79,7 @@ lasso_cv <- workflow_lasso %>%
                 )
 
 # Find best models            ( source: juliasilge.com/blog/lasso-the-office/ )
-lasso_cv %>% collect_metrics() %>% arrange(mean) %>%
+log_lasso_cv %>% collect_metrics() %>% arrange(mean) %>%
                 ggplot(aes(penalty, mean, color = .metric)) +
                 geom_errorbar(aes(
                   ymin = mean - std_err,
@@ -93,11 +93,18 @@ lasso_cv %>% collect_metrics() %>% arrange(mean) %>%
                 theme(legend.position = "none") + theme_base() #+ xlim(0, 0.1)
 
 
+log_lasso_cv %>% collect_metrics() %>% group_by(.metric) %>% summarize(mean_accuracy = mean(mean, na.rm = T))
 
 
 
-
-
+# # A tibble: 5 × 2
+# .metric   mean_accuracy
+# <chr>             <dbl>
+# 1 accuracy         0.809 
+# 2 precision        0.831 
+# 3 roc_auc          0.508 
+# 4 sens             0.967 
+# 5 spec             0.0398
 
 
 

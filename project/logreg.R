@@ -1,5 +1,5 @@
 # Running data cleaning and prep
-source("nlp_ml_proj.R")
+# source("nlp_ml_proj.R")
 gc()
 
 ##############################################################################
@@ -51,7 +51,7 @@ email_train <- email_train %>%
 folds <- vfold_cv(email_train, v = 5)
 
 # small sample of data 
-sample <- email_train[, ]
+# sample <- email_train[, ]
 
 # Defining the recipe
 data_recipe <- recipe(
@@ -96,34 +96,6 @@ cv_logistic %>% collect_metrics() %>%
 # 3 roc_auc   0.511 
 # 4 sens      0.947 
 # 5 spec      0.0710
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

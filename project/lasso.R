@@ -1,5 +1,5 @@
 # Running data cleaning and prep
-source("nlp_ml_proj.R")
+# source("nlp_ml_proj.R")
 gc()
 
 
@@ -82,9 +82,13 @@ lasso_cv %>% collect_metrics() %>%
             theme(legend.position = "none") + theme_base() + xlim(0, 0.1)
 
 
+lasso_cv %>% collect_metrics() %>% group_by(.metric) %>% summarize(mean_accuracy = mean(mean, na.rm = T))
 
-
-
+# # A tibble: 2 × 2
+# .metric mean_accuracy
+# <chr>           <dbl>
+# 1 mae             0.283
+# 2 rmse            0.376
 
 
 
