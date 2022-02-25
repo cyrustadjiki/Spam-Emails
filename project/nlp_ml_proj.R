@@ -163,7 +163,7 @@ email_test_label  <- email_df[2400:3000, ]$label
 # Defining threshold (eg. 1 == 1%)
 # Goal: Eliminate words that appear in __% of records in the training data
 min_freq <- round( 
-                email_dtm$nrow * ( ( threshold = 1.18 ) / 100 ),     # using 5%
+                email_dtm$nrow * ( ( threshold = 10.0 ) / 100 ),     # using 5%
                 0 
               ) 
 
@@ -202,13 +202,13 @@ email_test  <- apply( email_dtm_freq_test, MARGIN = 2,
 ##############################################################################
 
 
-rm(email_dtm_freq_train); 
-rm(email_dtm_freq_test);
-rm(email_dtm_train);
-rm(email_dtm_test);
-rm(reverse_email);
-rm(email_dtm);
-rm(email_corpus)
+# rm(email_dtm_freq_train); 
+# rm(email_dtm_freq_test);
+# rm(email_dtm_train);
+# rm(email_dtm_test);
+# rm(reverse_email);
+# rm(email_dtm);
+# rm(email_corpus)
 
 
 

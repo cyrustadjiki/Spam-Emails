@@ -24,30 +24,34 @@ email_train <- fread("test.csv") %>% data.frame()
 email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
 
 # Subsetting the data: removing bad explanatory variables
-email_train <- select( email_train, -c( 
+# email_train <- select( email_train, -c( 
                                         # conftest, 
-                                        atol,
+                                        # atol,
                                         # afnumberdecor, 
                                         # apg,
                                         # eneen, 
                                         # cpp, 
-                                        enenkio
+                                        # enenkio
                                         # hermio, 
                                         # kio 
-                                        ) )
+                                        # ) )
 
 
 # Set seed
 set.seed(9753)
 
-# Split for 5-fold cross-validation
-folds <- vfold_cv(email_train, v = 5)
 
 # converting outcome variable into character vector
 email_train <- email_train %>% 
                         mutate(
                           outcome_as_vector = ifelse(email_train_label == 1, "Yes", "No")
                         ) 
+
+# Split for 5-fold cross-validation
+folds <- vfold_cv(email_train, v = 5)
+
+# small sample of data 
+sample <- email_train[, ]
 
 # Defining the recipe
 data_recipe <- recipe(
@@ -57,7 +61,7 @@ data_recipe <- recipe(
                   step_rm(email_train_label) %>% 
                   update_role(V1, new_role = 'id variable') %>%
                   # step_num2factor( email_train_label ) %>% 
-                  step_dummy(all_nominal()) %>%
+                  step_dummy(all_nominal(), - all_outcomes()) %>%
                   step_zv(all_predictors()) %>%
                   step_normalize(all_predictors())
 
@@ -84,8 +88,14 @@ cv_logistic %>% collect_metrics() %>%
       select(.metric, mean)
 
 
-
-
+# # A tibble: 5 × 2
+# .metric     mean
+# <chr>      <dbl>
+# 1 accuracy  0.798 
+# 2 precision 0.832 
+# 3 roc_auc   0.511 
+# 4 sens      0.947 
+# 5 spec      0.0710
 
 
 
