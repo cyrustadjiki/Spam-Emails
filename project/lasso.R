@@ -26,8 +26,8 @@ email_train <- fread("test.csv") %>% data.frame()
 email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
 
 # Subsetting the data: c( conftest, atol, afnumberdecor, apg )
-email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
-                                        eneen, cpp, enenkio, hermio, kio ) ) 
+# email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
+#                                         eneen, cpp, enenkio, hermio, kio ) ) 
 
 # Splitting for 5-fold cross-validation
 folds <- email_train %>% vfold_cv(v = 5)
@@ -66,7 +66,7 @@ lasso_cv <- workflow_lasso %>%
 
 # Find best models
 lasso_cv %>% collect_metrics() 
-            # %>% 
+            # %>%
             # head() %>%
             # kbl(caption = "Model Accuracy", format = 'html') %>%
             # kable_classic(
