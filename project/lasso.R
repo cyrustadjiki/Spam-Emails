@@ -67,7 +67,7 @@ lasso_cv <- workflow_lasso %>%
                 metrics = metric_set(rmse, mae)
               )
 
-# Find best models
+# Find best models            ( source: juliasilge.com/blog/lasso-the-office/ )
 lasso_cv %>% collect_metrics() %>%
             ggplot(aes(penalty, mean, color = .metric)) +
             geom_errorbar(aes(
@@ -79,7 +79,7 @@ lasso_cv %>% collect_metrics() %>%
             geom_line(size = 1.5) +
             facet_wrap(~.metric, scales = "free", nrow = 2) +
             scale_x_log10() +
-            theme(legend.position = "none")
+            theme(legend.position = "none") + theme_base() + xlim(0, 0.1)
 
 
 
