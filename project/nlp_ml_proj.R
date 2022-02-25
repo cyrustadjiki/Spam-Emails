@@ -8,7 +8,7 @@ library( pacman )
 p_load( fastverse, magrittr, here, skimr, dplyr, ggplot2, ggthemes, equatiomatic,
         gridExtra, caret, naivebayes, knitr, kableExtra, shiny, data.table, 
         tidymodels, ggthemes, wordcloud, tm, SnowballC, RColorBrewer, e1071,
-        data.table, stringr, disk.frame, knitr
+        data.table, stringr, disk.frame, knitr, ranger #, randomForest
         )
 
 
