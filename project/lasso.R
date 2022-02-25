@@ -40,8 +40,8 @@ data_recipe <- recipe(
                 email_train_label ~ ., 
                 data = email_train 
                 ) %>% 
-              update_role(V1, new_role = 'id variable') %>%
-              step_dummy(all_nominal()) %>%
+              update_role(V1, new_role = 'id variable')  %>% 
+              step_dummy(all_nominal(), - all_outcomes()) %>%
               step_zv(all_predictors()) %>%
               step_normalize(all_predictors())
 
@@ -56,6 +56,9 @@ workflow_lasso <- workflow() %>%
                     add_recipe( data_recipe ) %>%
                     add_model( lasso )
 
+# Parallelize 
+doParallel::registerDoParallel(cores = 4)
+
 # CV
 lasso_cv <- workflow_lasso %>% 
               tune_grid(
@@ -65,43 +68,18 @@ lasso_cv <- workflow_lasso %>%
               )
 
 # Find best models
-lasso_cv %>% collect_metrics() 
-            # %>%
-            # head() %>%
-            # kbl(caption = "Model Accuracy", format = 'html') %>%
-            # kable_classic(
-            #   full_width = F,
-            #   html_font = "Cambria",
-            #   font_size = 24
-            # )
-
-
-
-##############################################################################
-# Visualizing Results | MAE
-##############################################################################
-
-
-# Filtering `lasso_cv` by mae 
-lasso_cv_results_mae <- lasso_cv %>% collect_metrics() %>% filter(.metric == "mae")
-
-# Visualizing results from `lasso_cv` MAE
-ggplot( lasso_cv_results_mae, aes( x = penalty, y = mean ) ) + geom_line(  ) + 
-  xlab("Lambda") + ylab("MAE") + theme_calc()  #+ geom_point(aes(x = best_lambda, y = min_mae))
-
-
-##############################################################################
-# Visualizing Results | RMSE
-##############################################################################
-
-
-lasso_cv_results_rmse <- lasso_cv %>% collect_metrics() %>% filter(.metric == "rmse")
-
-# Visualizing results from `lasso_cv` RMSE
-ggplot( lasso_cv_results_rmse, aes( x = penalty, y = mean ) ) + geom_line(  )  + 
-  xlab("Lambda") + ylab("RMSE") + theme_calc() + scale_x_log10() #+ geom_point(aes(x = best_lambda, y = min_rmse))
-
-
+lasso_cv %>% collect_metrics() %>%
+            ggplot(aes(penalty, mean, color = .metric)) +
+            geom_errorbar(aes(
+              ymin = mean - std_err,
+              ymax = mean + std_err
+            ),
+            alpha = 0.5
+            ) +
+            geom_line(size = 1.5) +
+            facet_wrap(~.metric, scales = "free", nrow = 2) +
+            scale_x_log10() +
+            theme(legend.position = "none")
 
 
 
