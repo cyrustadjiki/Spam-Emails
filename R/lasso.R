@@ -16,6 +16,14 @@ options(scipen = 99999)
 email_train <- cbind( email_train, 
                       email_train_label )
 
+# Adding spam vs ham to train data
+email_test <- cbind( email_test, 
+                      email_test_label )
+
+# 100% of observations instead of 80%
+email_train <- rbind(email_train,
+                     email_test)
+
 #
 write.csv(email_train, "test.csv")
 
