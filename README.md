@@ -20,7 +20,7 @@ EC 424
 3. Estimate the error using cross-validation
 4. Test the chosen model on the held-out data
 5. Create reports:
-      * Kaggle notebook (final version)
+      * Rmarkdown file and knitted html file 
       * 1-page executive summary
       * 4-slide project summary
       * Individual evaluations
