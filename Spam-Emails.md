@@ -1,11 +1,11 @@
 ---
 title: "Spam Emails"
 author: "Cyrus Tadjiki, Zoe Arnaut, Octavio Lima"
-date: "3/9/2022"
+date: "March 9th 2022"
 output: 
   html_document:
-    theme: flatly
-    highlight: monochrome 
+    theme: united
+    highlight: tango 
     toc: yes
     toc_depth: 4
     toc_float: yes
@@ -15,20 +15,24 @@ output:
 
 
 
-# Loading Packages
+These are just some notes for me...  
+# TODO:
+- Change up axis on log_lasso plot  
+- Add more color to Confusion Matrix 
+- Confirm we want to keep our seed the same for logreg
+- Random Forrest CM
 
-```r
-library(pacman)
-p_load(fastverse, magrittr, here, skimr, dplyr, 
-       ggplot2, ggthemes, equatiomatic, gridExtra, 
-       caret, naivebayes, knitr, kableExtra, shiny, 
-       data.table, tidymodels, ggthemes, wordcloud,
-       tm, SnowballC, RColorBrewer, e1071, data.table, 
-       stringr, disk.frame, knitr, ranger #, randomForest
-       )
-```
 
-# Loading Data
+
+# Introduction
+@Zoe
+
+
+# Data
+@Zoe  
+
+
+## Loading Data
 
 ```r
 # Loading email dataset: consists of "text data" and "dummy variable"
@@ -42,16 +46,28 @@ email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
 email_df$label <- factor( email_df$label )
 ```
 
+## Loading Packages
 
-# Pre Processing & Cleaning (stemming)
+```r
+library(pacman)
+p_load(fastverse, magrittr, here, skimr, dplyr, 
+       ggplot2, ggthemes, equatiomatic, gridExtra, 
+       caret, naivebayes, knitr, kableExtra, shiny, 
+       data.table, tidymodels, ggthemes, wordcloud,
+       tm, SnowballC, RColorBrewer, e1071, data.table, 
+       stringr, disk.frame, knitr, ranger #, randomForest
+       )
+```
+
+## Preprocessing & Cleaning (stemming)
 To retrieve the root of a word (eg, doing -> do), options are "stemming" &
 "lemmatization".
 
-**STEMMING:** faster but maybe not as effective
-**LEMMATIZATION:** slower but more effective
-**More on this:** (towardsdatascience.com/stemming-vs-lemmatization-2daddabcb221)
+**STEMMING:** faster but maybe not as effective  
+**LEMMATIZATION:** slower but more effective  
+**More on this:** [Here](towardsdatascience.com/stemming-vs-lemmatization-2daddabcb221)
 
-`VectorSource()`: creates one document for each email 
+`VectorSource()`: creates one document for each email   
 `Vcorpus()`:      creates a volatile corpus from these individual emails
 
 ```r
@@ -85,7 +101,7 @@ email_dtm <- tm::DocumentTermMatrix( sample( email_corpus, length( email_corpus 
 ```
                             
 
-# Visualizing cleaned data
+## Preprocessed Data for Visualization
 
 ```r
 reverse_email <- data.frame(
@@ -94,8 +110,8 @@ reverse_email <- data.frame(
                 type = email_df$label
                 )
 ```
-
-# Visualing text data after cleaning and pre-processing
+## Most Frequent Words in Data  
+Visualing text data after cleaning and pre-processing
 
 ```r
 wordcloud( reverse_email$text, 
@@ -104,252 +120,12 @@ wordcloud( reverse_email$text,
            random.order = FALSE ) 
 ```
 
-```
-## Warning in tm_map.SimpleCorpus(corpus, tm::removePunctuation): transformation
-## drops documents
-```
-
-```
-## Warning in tm_map.SimpleCorpus(corpus, function(x) tm::removeWords(x,
-## tm::stopwords())): transformation drops documents
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : program could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : check could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : home could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : market could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : secur could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : subject could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : give could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : internet could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : interest could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : come could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : two could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : comput could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : someth could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : person could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : softwar could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : develop could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : site could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : com could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : nation could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : sep could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : realli could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : unsubscrib could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : network could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : unit could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : provid could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : base could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : phone could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : everi could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : thank could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : write could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : build could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : follow could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : countri could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : sinc could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : made could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : last could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : point could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : today could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : found could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : sure could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : case could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : must could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : sponsor could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : technolog could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : current could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(reverse_email$text, max.words = 150, colors =
-## brewer.pal(7, : server could not be fit on page. It will not be plotted.
-```
-
 ![](Spam-Emails_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 
-# Subsetting SPAM vs. NON-SPAM data; checking most frequent words there
+## Subsetting spam vs. non-spam datasets 
 
-## Visualizing spam data
+### Visualizing most frequent words in spam data
 
 ```r
 # Subsetting to spam == 1
@@ -361,124 +137,9 @@ wordcloud( spam$text,
            main = "Spam")
 ```
 
-```
-## Warning in tm_map.SimpleCorpus(corpus, tm::removePunctuation): transformation
-## drops documents
-```
-
-```
-## Warning in tm_map.SimpleCorpus(corpus, function(x) tm::removeWords(x,
-## tm::stopwords())): transformation drops documents
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## guarante could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## respons could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## opportun could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## enenkio could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : repli
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : credit
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## financi could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : requir
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## thousand could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : trade
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## profession could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : onlin
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : befor
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : step
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : must
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : access
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : simpl
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : direct
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## success could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, : phone
-## could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(spam$text, max.words = 150, colors = brewer.pal(7, :
-## request could not be fit on page. It will not be plotted.
-```
-
 ![](Spam-Emails_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
-## Visualing non-spam data
+### Visualing most frequent words in non-spam data
 
 ```r
 # Subsetting to spam == 0
@@ -490,91 +151,11 @@ wordcloud( ham$text,
            main = "Non-Spam") 
 ```
 
-```
-## Warning in tm_map.SimpleCorpus(corpus, tm::removePunctuation): transformation
-## drops documents
-```
-
-```
-## Warning in tm_map.SimpleCorpus(corpus, function(x) tm::removeWords(x,
-## tm::stopwords())): transformation drops documents
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : version could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : anoth could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : servic could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : receiv could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : comput could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : code could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : provid could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : folder could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : softwar could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : support could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : without could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : post could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : septemb could not be fit on page. It will not be plotted.
-```
-
-```
-## Warning in wordcloud(ham$text, max.words = 150, colors = brewer.pal(7,
-## "Dark2"), : probabl could not be fit on page. It will not be plotted.
-```
-
 ![](Spam-Emails_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
-# Splitting Data
+## Splitting Data
 
-# Data is sorted randomly, so it's easy to split Testing vs. Training
+### Data is sorted randomly, so it's easy to split Testing vs. Training
 
 ```r
 email_dtm_train <- email_dtm[   1:2400, ]         # 80% training
@@ -584,35 +165,55 @@ email_train_label <- email_df[   1:2400, ]$label
 email_test_label  <- email_df[2400:3000, ]$label
 ```
 
+### Checking that data is split proportionally
 
+```r
+prop_table = data.frame(c(prop.table( table( email_train_label ) )[[2]], #Train
+                          prop.table( table( email_train_label ) )[[1]]),
+                        c(prop.table( table( email_test_label ) )[[2]], # Test
+                          prop.table( table( email_test_label ) )[[1]])
+                        )
+rownames(prop_table) = c("Spam", "Non-Spam")
+names(prop_table) = c("Train", "Test")
+kable(prop_table, digits = 3) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
 
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Train </th>
+   <th style="text-align:right;"> Test </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Spam </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.151 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Non-Spam </td>
+   <td style="text-align:right;"> 0.83 </td>
+   <td style="text-align:right;"> 0.849 </td>
+  </tr>
+</tbody>
+</table>
 
-checking that data is split proportionally
-prop.table( table( email_train_label ) )
- 0         1 
-0.83      0.17 
-
-prop.table( table( email_test_label ) )
-0         1 
-0.8469218 0.1530782 
-
-
-
-TRIMMING: reducing number of features | currently 25,050 (too many!)
-
+## Trimming: reducing number of features 
+We currently 25,050 variables (too many!)  
 Defining threshold (eg. 1 == 1%)
 Goal: Eliminate words that appear in __% of records in the training data
 
-
 ```r
 min_freq <- round( 
-                email_dtm$nrow * ( ( threshold = 10.0 ) / 100 ),     # using 5%
+                email_dtm$nrow * ( ( threshold = 10.0 ) / 100 ),     # using 10%
                 0 
               ) 
 ```
 
-
-# Create vector of most frequent words
+## Create vector of most frequent words
 
 ```r
 freq_words <- findFreqTerms( x = email_dtm, 
@@ -623,7 +224,7 @@ email_dtm_freq_test  <- email_dtm_test[ , freq_words]
 ```
 
 
-# Final, cleaned, prepared dataset for Naive Bayes
+## Final, cleaned, prepared dataset
 
 ```r
 # Simple dummy transformation fn.
@@ -641,7 +242,413 @@ email_test  <- apply( email_dtm_freq_test, MARGIN = 2,
 
 
 
+# Methods
 
+
+
+## Naive Bayes
+
+```r
+#Create model from the training dataset
+bayes_classifier <- e1071::naiveBayes( email_train, 
+                                       email_train_label )
+# Predicting on test data
+email_test_pred <- predict( bayes_classifier, 
+                            email_test )
+```
+
+
+
+### Naive Bayes Results
+![](Spam-Emails_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
+## Lasso
+
+```r
+# Removing scientific notation
+options(scipen = 99999)
+
+# Adding spam vs ham to train data
+email_train <- cbind( email_train, 
+                      email_train_label )
+
+# Adding spam vs ham to train data
+email_test <- cbind( email_test, 
+                      email_test_label )
+
+# 100% of observations instead of 80%
+email_train <- rbind(email_train,
+                     email_test)
+
+#
+write.csv(email_train, "test.csv")
+
+# 
+email_train <- fread("test.csv") %>% data.frame()
+
+# 0 and 1 for dummy instead of 1 and 2
+email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
+
+# Subsetting the data: c( conftest, atol, afnumberdecor, apg )
+# email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
+#                                         eneen, cpp, enenkio, hermio, kio ) ) 
+
+# Splitting for 5-fold cross-validation
+folds <- email_train %>% vfold_cv(v = 5)
+
+# Defining Lambdas (from Lecture 005)
+lambdas <- data.frame( penalty = c( 0, 10^seq( from = 5, to = -2, length = 100 ) ) )
+
+# Defining the recipe
+data_recipe <- recipe(
+                email_train_label ~ ., 
+                data = email_train 
+                ) %>% 
+              update_role(V1, new_role = 'id variable')  %>% 
+              step_dummy(all_nominal(), - all_outcomes()) %>%
+              step_zv(all_predictors()) %>%
+              step_normalize(all_predictors())
+
+# Defining Lasso Model
+lasso <- linear_reg(
+          penalty = tune(), 
+          mixture = 1) %>% 
+          set_engine("glmnet")
+
+# Setting up workflow
+workflow_lasso <- workflow() %>%
+                    add_recipe( data_recipe ) %>%
+                    add_model( lasso )
+
+# Parallelize 
+doParallel::registerDoParallel(cores = 4)
+
+# CV
+lasso_cv <- workflow_lasso %>% 
+              tune_grid(
+                resamples = folds,
+                grid = lambdas,
+                metrics = metric_set(rmse, mae)
+              )
+```
+
+### Lasso Results
+
+```
+## Scale for 'x' is already present. Adding another scale for 'x', which will
+## replace the existing scale.
+```
+
+```
+## Warning: Removed 170 row(s) containing missing values (geom_path).
+```
+
+![](Spam-Emails_files/figure-html/unnamed-chunk-19-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metric </th>
+   <th style="text-align:right;"> Mean Accuracy </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Mean Absolute Error </td>
+   <td style="text-align:right;"> 0.278 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Root Mean Squared Error </td>
+   <td style="text-align:right;"> 0.373 </td>
+  </tr>
+</tbody>
+</table>
+
+
+## Logistic Lasso
+
+```r
+# Set seed
+set.seed(9753)
+
+# converting outcome variable into character vector
+email_train <- email_train %>% 
+                  mutate(
+                    outcome_as_vector = ifelse(email_train_label == 1, "Yes", "No")
+                  ) 
+
+# Split for 5-fold cross-validation
+folds <- vfold_cv(email_train, v = 5)
+
+# Defining the recipe
+data_recipe <- recipe(
+                  outcome_as_vector ~ ., 
+                  data = email_train 
+                ) %>% 
+                  step_rm(email_train_label) %>% 
+                  update_role(V1, new_role = 'id variable') %>%
+                  # step_num2factor( email_train_label ) %>% 
+                  step_dummy(all_nominal(), - all_outcomes()) %>%
+                  step_zv(all_predictors()) %>%
+                  step_normalize(all_predictors())
+
+# Defining Lambdas (from Lecture 005)
+lambdas <- data.frame( penalty = c( 0, 10^seq( from = 5, to = -2, length = 100 ) ) )
+
+# Defining Lasso Model
+log_lasso <- logistic_reg(
+            mode = 'classification',
+            penalty = tune(), 
+            mixture = 1) %>% 
+            set_engine("glmnet")
+
+# Setting up workflow
+workflow_lasso <- workflow() %>%
+                    add_recipe( data_recipe ) %>%
+                    add_model( log_lasso )
+
+# Parallelize 
+# doParallel::registerDoParallel(cores = 4)
+
+# CV
+log_lasso_cv <- workflow_lasso %>% 
+                tune_grid(
+                  resamples = folds,
+                  metrics = metric_set(accuracy, roc_auc, sens, spec, precision),
+                  grid = grid_latin_hypercube(penalty(), size = 5),
+                  # grid = grid_latin_hypercube(penalty() , mixture(), size = 20),
+                  control = control_grid(parallel_over = 'resamples')
+                )
+```
+
+### Logistic Lasso Results
+![](Spam-Emails_files/figure-html/unnamed-chunk-21-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metric </th>
+   <th style="text-align:right;"> Mean </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Accuracy </td>
+   <td style="text-align:right;"> 0.822 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Precision </td>
+   <td style="text-align:right;"> 0.834 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Area Under the Curve </td>
+   <td style="text-align:right;"> 0.501 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sensitivity </td>
+   <td style="text-align:right;"> 0.982 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Specificity </td>
+   <td style="text-align:right;"> 0.022 </td>
+  </tr>
+</tbody>
+</table>
+
+
+## Logistic 
+
+```r
+# set.seed(9754)
+set.seed(9753)
+
+
+# converting outcome variable into character vector
+email_train <- email_train %>% 
+                        mutate(
+                          outcome_as_vector = ifelse(email_train_label == 1, "Yes", "No")
+                        ) 
+
+# Split for 5-fold cross-validation
+folds <- vfold_cv(email_train, v = 5)
+
+# small sample of data 
+# sample <- email_train[, ]
+
+# Defining the recipe
+data_recipe <- recipe(
+                  outcome_as_vector ~ ., 
+                  data = email_train 
+                    ) %>% 
+                  step_rm(email_train_label) %>% 
+                  update_role(V1, new_role = 'id variable') %>%
+                  # step_num2factor( email_train_label ) %>% 
+                  step_dummy(all_nominal(), - all_outcomes()) %>%
+                  step_zv(all_predictors()) %>%
+                  step_normalize(all_predictors())
+
+
+# Define the model
+model_logistic <- logistic_reg(
+                    mode = 'classification') %>%    # Simple LogReg bc no penalty
+                    set_engine('glm')
+
+# Workflow
+workflow_logistic <- workflow() %>% 
+                      add_recipe(data_recipe) %>% 
+                      add_model(model_logistic)
+
+# Cross-Validation
+cv_logistic <- workflow_logistic %>%
+                fit_resamples(
+                  resamples = folds,
+                  metrics = metric_set(accuracy, roc_auc, sens, spec, precision)
+                )
+```
+### Logistic Regression Results
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metric </th>
+   <th style="text-align:right;"> Mean </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Accuracy </td>
+   <td style="text-align:right;"> 0.814 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Precision </td>
+   <td style="text-align:right;"> 0.834 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Area Under the Curve </td>
+   <td style="text-align:right;"> 0.500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sensitivity </td>
+   <td style="text-align:right;"> 0.971 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Specificity </td>
+   <td style="text-align:right;"> 0.030 </td>
+  </tr>
+</tbody>
+</table>
+
+## Random Forests
+
+```r
+random_forest <- train(
+                  x = email_train_rf,
+                  y = email_train_label_rf,
+                  method = "ranger", 
+                  num.trees = 200,
+                  importance = "impurity",
+                  trControl = trainControl(method = "cv", 
+                                           number = 3,
+                                           verboseIter = TRUE
+                  )
+                )
+```
+
+```
+## Aggregating results
+## Selecting tuning parameters
+## Fitting mtry = 2, splitrule = gini, min.node.size = 1 on full training set
+```
+
+```r
+# Outputting results
+random_forest
+```
+
+```
+## Random Forest 
+## 
+## 2400 samples
+##  207 predictor
+##    2 classes: '0', '1' 
+## 
+## No pre-processing
+## Resampling: Cross-Validated (3 fold) 
+## Summary of sample sizes: 1600, 1601, 1599 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   Accuracy   Kappa        
+##     2   gini        0.8287498   0.0047319072
+##     2   extratrees  0.8279160  -0.0001315811
+##   104   gini        0.8095852   0.0015703686
+##   104   extratrees  0.8091665   0.0036330291
+##   207   gini        0.8050019  -0.0007969311
+##   207   extratrees  0.8050008   0.0047684679
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## Accuracy was used to select the optimal model using the largest value.
+## The final values used for the model were mtry = 2, splitrule = gini
+##  and min.node.size = 1.
+```
+
+```r
+# Checking "variable importances 
+varImp(random_forest, scale = TRUE)$importance %>% 
+                rownames_to_column() %>% 
+                arrange(-Overall) %>% 
+                top_n(25) %>%
+                ggplot() + 
+                aes(x = reorder(rowname, Overall), y = Overall) +
+                geom_col() + 
+                labs(title = "Most Predictive Words") +
+                coord_flip()
+```
+
+```
+## Selecting by Overall
+```
+
+![](Spam-Emails_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+
+```r
+# Fitting to the test data
+predictions <- predict(random_forest, email_test)
+
+
+# Output
+```
+### Random Forests Results
+
+```r
+confusionMatrix(predictions, email_test_label)
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 509  91
+##          1   1   0
+##                                              
+##                Accuracy : 0.8469             
+##                  95% CI : (0.8156, 0.8748)   
+##     No Information Rate : 0.8486             
+##     P-Value [Acc > NIR] : 0.5728             
+##                                              
+##                   Kappa : -0.0033            
+##                                              
+##  Mcnemar's Test P-Value : <0.0000000000000002
+##                                              
+##             Sensitivity : 0.9980             
+##             Specificity : 0.0000             
+##          Pos Pred Value : 0.8483             
+##          Neg Pred Value : 0.0000             
+##              Prevalence : 0.8486             
+##          Detection Rate : 0.8469             
+##    Detection Prevalence : 0.9983             
+##       Balanced Accuracy : 0.4990             
+##                                              
+##        'Positive' Class : 0                  
+## 
+```
+
+# Results
 
 
 

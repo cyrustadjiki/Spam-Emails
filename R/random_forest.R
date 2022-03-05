@@ -10,8 +10,8 @@ gc()
 
 # Trainin Random Forest
 random_forest <- train(
-                  x = email_train,
-                  y = email_train_label,
+                  x = email_train_rf,
+                  y = email_train_label_rf,
                   method = "ranger", 
                   num.trees = 200,
                   importance = "impurity",
