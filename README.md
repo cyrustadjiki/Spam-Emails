@@ -21,6 +21,6 @@ EC 424
 4. Test the chosen model on the held-out data
 5. Create reports:
       * Rmarkdown file and knitted html file 
-      * 1-page executive summary
+      * 1-page [executive summary](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/executive-summary.html)
       * 4-slide project summary
       * Individual evaluations
