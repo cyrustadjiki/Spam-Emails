@@ -1,0 +1,61 @@
+---
+output: html_document
+---
+
+<center>
+
+#### EXECUTIVE SUMMARY
+
+**Identifying Spam Emails from Word Frequencies**
+
+Zoë Arnaut, Octavio De Lima, Cyrus Tadjiki
+
+</center>
+
+|
+| 
+
+**ABSTRACT**
+
+Predicting spam messages is a machine learning algorithm that most email providers need to include to protect their users. Five classification methods are used to identify spam emails from non-spam using word frequency. ___ proves to be the most reliable and accurate method. 
+
+|
+| 
+ 
+**INTRODUCTION**
+
+Any email user knows that spam messages are annoying; what they may not realize is how invasive spam emails can be. Once an email is opened, every click, auto-load image, and download can transmit personal and computer information to the spammer, including IP address, location, device type, and operating system (Chu, n.d.). Given these dangers, distinguishing between harmful and non-harmful emails becomes important. This project tests five different types of models, the Naive Bayes classifier, lasso regression, logistic regression, logistic lasso regression, and a random forest, to predict whether an email is spam or not by the frequencies of words. If proved to be accurate, these methods could be used by email providers to screen for spam messages and protect users.
+ 
+|
+| 
+ 
+**DATA**
+
+The “Spam Mails Dataset” is publicly available on Kaggle and contains the modified text of 500 spam emails and 2,500 non-spam emails (Garne, 2019). Data cleaning was conducted using a guide by Shreyas Khades (n.d.), and the steps included stemming (retrieving the root of a word), removing common stop words (such as “the” and “to”), and creating predictor variables of word frequencies. One disadvantage of the data was the number of spam emails that were either empty or in a different language, which had to be excluded and changed the ratio between spam and non-spam. 
+
+| 
+| 
+ 
+**METHODS**
+
+The five machine learning methods used for predictions were the Naive Bayes classifier, lasso regression, logistic regression, logistic lasso regression, and a random forest. In lasso, logistic lasso, and logistic regressions, the penalty was tuned to minimize the mean squared error (MSE). For the random forest, we used 200 trees.
+
+| 
+| 
+ 
+**RESULTS AND CONCLUSIONS**
+
+The crucial metrics in the spam email context are test accuracy (ACC) and sensitivity (SENS). ACC can help determine whether a model is performing well, but it is not the only measure of a good predictor. SENS is key because clicking on spam is dangerous, so a spam email that is predicted not-spam (a false negative) has consequences. Naive Bayes produced a test ACC of 0.788 and a SENS of 0.044. Lasso regression produces an ACC of 0.848 and a SENS of 0.  Logistic lasso returns ___ ACC and ___ SENS. Logistic regression returns ___ ACC and ___ SENS. Finally, the random forest returns ___ ACC and ___ SENS. While each model has its advantages and disadvantages, balancing test accuracy and sensitivity, ____ is the best predictor of spam.
+
+|
+|
+
+**SOURCES CITED** 
+
+| Chu, Mike. (n.d.) “What happens if you open spam email? 4 dangers to your account” DataOverhaulers. Retrieved from 
+|     https://dataoverhaulers.com/open-spam-email/. 
+|
+| Garne, Venkatesh. (2019). Spam Mails Dataset [Data set]. Kaggle. Retrieved from https://www.kaggle.com/venky73/spam-mails-dataset/. 
+|
+| Khadse, Shreyas. (n.d.) “Spam/ham test SMS classification using Naive Bayes in R.” RPubs by RStudio. 
+|     https://rpubs.com/shreyaskhadse/spam_ham_naive_bayes. 
