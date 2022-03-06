@@ -21,6 +21,7 @@ These are just some notes for me...
 - Add more color to Confusion Matrix 
 - Confirm we want to keep our seed the same for logreg
 - Random Forrest CM
+- Random Name Generator
 
 
 
@@ -238,6 +239,14 @@ email_train <- apply( email_dtm_freq_train, MARGIN = 2,
 
 email_test  <- apply( email_dtm_freq_test, MARGIN = 2,
                       convert_values )
+glimpse(email_train)
+```
+
+```
+##  chr [1:2400, 1:207] "Yes" "No" "No" "No" "No" "No" "No" "No" "Yes" "No" ...
+##  - attr(*, "dimnames")=List of 2
+##   ..$ Docs : chr [1:2400] "2396" "2073" "2579" "2256" ...
+##   ..$ Terms: chr [1:207] "actual" "address" "also" "american" ...
 ```
 
 
@@ -264,35 +273,9 @@ email_test_pred <- predict( bayes_classifier,
 
 ## Lasso
 
+
+
 ```r
-# Removing scientific notation
-options(scipen = 99999)
-
-# Adding spam vs ham to train data
-email_train <- cbind( email_train, 
-                      email_train_label )
-
-# Adding spam vs ham to train data
-email_test <- cbind( email_test, 
-                      email_test_label )
-
-# 100% of observations instead of 80%
-email_train <- rbind(email_train,
-                     email_test)
-
-#
-write.csv(email_train, "test.csv")
-
-# 
-email_train <- fread("test.csv") %>% data.frame()
-
-# 0 and 1 for dummy instead of 1 and 2
-email_train$email_train_label <- ifelse(email_train$email_train_label == 1, 0, 1)
-
-# Subsetting the data: c( conftest, atol, afnumberdecor, apg )
-# email_train <- select( email_train, -c( conftest, atol, afnumberdecor, apg, 
-#                                         eneen, cpp, enenkio, hermio, kio ) ) 
-
 # Splitting for 5-fold cross-validation
 folds <- email_train %>% vfold_cv(v = 5)
 
@@ -335,15 +318,12 @@ lasso_cv <- workflow_lasso %>%
 ### Lasso Results
 
 ```
-## Scale for 'x' is already present. Adding another scale for 'x', which will
-## replace the existing scale.
+## Warning: Transformation introduced infinite values in continuous x-axis
+
+## Warning: Transformation introduced infinite values in continuous x-axis
 ```
 
-```
-## Warning: Removed 170 row(s) containing missing values (geom_path).
-```
-
-![](Spam-Emails_files/figure-html/unnamed-chunk-19-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+![](Spam-Emails_files/figure-html/unnamed-chunk-20-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
    <th style="text-align:left;"> Metric </th>
@@ -420,7 +400,7 @@ log_lasso_cv <- workflow_lasso %>%
 ```
 
 ### Logistic Lasso Results
-![](Spam-Emails_files/figure-html/unnamed-chunk-21-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
    <th style="text-align:left;"> Metric </th>
@@ -501,6 +481,7 @@ cv_logistic <- workflow_logistic %>%
                   metrics = metric_set(accuracy, roc_auc, sens, spec, precision)
                 )
 ```
+
 ### Logistic Regression Results
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
  <thead>
@@ -554,99 +535,49 @@ random_forest <- train(
 ## Selecting tuning parameters
 ## Fitting mtry = 2, splitrule = gini, min.node.size = 1 on full training set
 ```
-
-```r
-# Outputting results
-random_forest
-```
-
-```
-## Random Forest 
-## 
-## 2400 samples
-##  207 predictor
-##    2 classes: '0', '1' 
-## 
-## No pre-processing
-## Resampling: Cross-Validated (3 fold) 
-## Summary of sample sizes: 1600, 1601, 1599 
-## Resampling results across tuning parameters:
-## 
-##   mtry  splitrule   Accuracy   Kappa        
-##     2   gini        0.8287498   0.0047319072
-##     2   extratrees  0.8279160  -0.0001315811
-##   104   gini        0.8095852   0.0015703686
-##   104   extratrees  0.8091665   0.0036330291
-##   207   gini        0.8050019  -0.0007969311
-##   207   extratrees  0.8050008   0.0047684679
-## 
-## Tuning parameter 'min.node.size' was held constant at a value of 1
-## Accuracy was used to select the optimal model using the largest value.
-## The final values used for the model were mtry = 2, splitrule = gini
-##  and min.node.size = 1.
-```
+### Random Forests Results
 
 ```r
 # Checking "variable importances 
-varImp(random_forest, scale = TRUE)$importance %>% 
+top_25words = varImp(random_forest, scale = TRUE)$importance %>% 
                 rownames_to_column() %>% 
                 arrange(-Overall) %>% 
-                top_n(25) %>%
-                ggplot() + 
-                aes(x = reorder(rowname, Overall), y = Overall) +
-                geom_col() + 
-                labs(title = "Most Predictive Words") +
-                coord_flip()
+                top_n(25) 
 ```
 
 ```
 ## Selecting by Overall
 ```
 
-![](Spam-Emails_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+```r
+# ggplot(data = top_25words) + 
+# aes(x = reorder(rowname, Overall), y = Overall) +
+# geom_col(stat = "identify") + 
+# labs(title = "Most Predictive Words") +
+# coord_flip()
+
+ggplot(data = top_25words, 
+   aes(x=reorder(rowname, Overall),
+       y = Overall)) +
+        geom_bar(stat = "identity") +
+        theme_base() +
+        theme(axis.text.x=element_text(angle=50, hjust=1))+
+        xlab("Top 25 Predictive Words(stemed)")+
+        ylab("Frequency of Word") +
+        labs(title = "Most Predictive Words") +
+        theme(plot.title = element_text(hjust = 0.5))
+```
+
+![](Spam-Emails_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 ```r
 # Fitting to the test data
 predictions <- predict(random_forest, email_test)
-
-
-# Output
-```
-### Random Forests Results
-
-```r
-confusionMatrix(predictions, email_test_label)
+random_forest_results = confusionMatrix(predictions, email_test_label)
+draw_confusion_matrix(random_forest_results)
 ```
 
-```
-## Confusion Matrix and Statistics
-## 
-##           Reference
-## Prediction   0   1
-##          0 509  91
-##          1   1   0
-##                                              
-##                Accuracy : 0.8469             
-##                  95% CI : (0.8156, 0.8748)   
-##     No Information Rate : 0.8486             
-##     P-Value [Acc > NIR] : 0.5728             
-##                                              
-##                   Kappa : -0.0033            
-##                                              
-##  Mcnemar's Test P-Value : <0.0000000000000002
-##                                              
-##             Sensitivity : 0.9980             
-##             Specificity : 0.0000             
-##          Pos Pred Value : 0.8483             
-##          Neg Pred Value : 0.0000             
-##              Prevalence : 0.8486             
-##          Detection Rate : 0.8469             
-##    Detection Prevalence : 0.9983             
-##       Balanced Accuracy : 0.4990             
-##                                              
-##        'Positive' Class : 0                  
-## 
-```
+![](Spam-Emails_files/figure-html/unnamed-chunk-26-2.png)<!-- -->
 
 # Results
 
