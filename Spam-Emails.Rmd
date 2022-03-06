@@ -18,8 +18,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 These are just some notes for me...  
-# TODO:
-<<<<<<< HEAD
 - Change up axis on log_lasso plot    
 - Add more color to Confusion Matrix   
 - Confirm we want to keep our seed the same for logreg  
@@ -27,22 +25,6 @@ These are just some notes for me...
 - Random Name Generator  
 - Accuracy for Lasso  
 - Add URL to data and compare accuracy  
-
-
-# Introduction
-@Zoe
-
-
-# Data
-@Zoe  
-
-=======
-- Change up axis on log_lasso plot  
-- Add more color to Confusion Matrix 
-- Confirm we want to keep our seed the same for logreg
-- Random Forrest CM
-- Random Name Genrator
->>>>>>> 01eadbcfccc1d13d7c3c952e59043ea249e2b926
 
 ## Loading Data
 ```{r}
