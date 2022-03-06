@@ -1,6 +1,6 @@
 ---
 title: "Spam Emails"
-author: "Cyrus Tadjiki, Zoe Arnaut, Octavio Lima"
+author: "Cyrus Tadjiki, Zoë Arnaut, Octavio Lima"
 date: "March 9th 2022"
 output: 
   html_document:
@@ -16,22 +16,12 @@ output:
 
 
 These are just some notes for me...  
-# TODO:
-- Change up axis on log_lasso plot  
-- Add more color to Confusion Matrix 
-- Confirm we want to keep our seed the same for logreg
-- Random Forrest CM
-- Random Name Generator
-
-
-
-# Introduction
-@Zoe
-
-
-# Data
-@Zoe  
-
+- Add more color to Confusion Matrix   
+- Confirm we want to keep our seed the same for logreg  
+- Random Name Generator  
+- Accuracy for Lasso  
+- Add URL to data and compare accuracy  
+- Have a way to glimpse at data
 
 ## Loading Data
 
@@ -61,8 +51,7 @@ p_load(fastverse, magrittr, here, skimr, dplyr,
 ```
 
 ## Preprocessing & Cleaning (stemming)
-To retrieve the root of a word (eg, doing -> do), options are "stemming" &
-"lemmatization".
+To retrieve the root of a word (eg, doing -> do), options are "stemming" &"lemmatization".
 
 **STEMMING:** faster but maybe not as effective  
 **LEMMATIZATION:** slower but more effective  
@@ -90,8 +79,11 @@ email_corpus <- tm_map( email_corpus,
                        removeWords, stopwords( "en" ) )
 
 # OPTIONAL -- Removing two most frequent stopwords: "NUMBER", "URL"
-email_corpus <- tm_map( email_corpus,
-                       removeWords, c("NUMBER", "number", "url", "URL") )
+ email_corpus <- tm_map( email_corpus,
+ removeWords, c("NUMBER", "number", "url", "URL") )
+# Testing keeping URL
+ # email_corpus <- tm_map( email_corpus,
+                        # removeWords, c("NUMBER", "number") )
 
 # OPTIONAL -- Removing extra white space
 # email_corpus <- tm_map( email_corpus,
@@ -160,10 +152,10 @@ wordcloud( ham$text,
 
 ```r
 email_dtm_train <- email_dtm[   1:2400, ]         # 80% training
-email_dtm_test  <- email_dtm[2400:3000, ]         # 20% testing
+email_dtm_test  <- email_dtm[2401:3000, ]         # 20% testing
 # Adding labels for convenience
 email_train_label <- email_df[   1:2400, ]$label
-email_test_label  <- email_df[2400:3000, ]$label
+email_test_label  <- email_df[2401:3000, ]$label
 ```
 
 ### Checking that data is split proportionally
@@ -192,18 +184,18 @@ kable(prop_table, digits = 3) %>%
   <tr>
    <td style="text-align:left;"> Spam </td>
    <td style="text-align:right;"> 0.17 </td>
-   <td style="text-align:right;"> 0.151 </td>
+   <td style="text-align:right;"> 0.152 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Non-Spam </td>
    <td style="text-align:right;"> 0.83 </td>
-   <td style="text-align:right;"> 0.849 </td>
+   <td style="text-align:right;"> 0.848 </td>
   </tr>
 </tbody>
 </table>
 
 ## Trimming: reducing number of features 
-We currently 25,050 variables (too many!)  
+We currently have 25,050 variables (too many!)  
 Defining threshold (eg. 1 == 1%)
 Goal: Eliminate words that appear in __% of records in the training data
 
@@ -326,18 +318,33 @@ lasso_cv <- workflow_lasso %>%
 ![](Spam-Emails_files/figure-html/unnamed-chunk-20-1.png)<!-- --><table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
+   <th style="text-align:right;"> Penalty </th>
    <th style="text-align:left;"> Metric </th>
-   <th style="text-align:right;"> Mean Accuracy </th>
+   <th style="text-align:left;"> Estimator </th>
+   <th style="text-align:right;"> Mean </th>
+   <th style="text-align:right;"> n </th>
+   <th style="text-align:right;"> Standard Error </th>
+   <th style="text-align:left;"> .config </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Mean Absolute Error </td>
+   <td style="text-align:right;"> 0.027 </td>
+   <td style="text-align:left;"> mae </td>
+   <td style="text-align:left;"> standard </td>
    <td style="text-align:right;"> 0.278 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0.004 </td>
+   <td style="text-align:left;"> Preprocessor1_Model008 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Root Mean Squared Error </td>
+   <td style="text-align:right;"> 0.027 </td>
+   <td style="text-align:left;"> rmse </td>
+   <td style="text-align:left;"> standard </td>
    <td style="text-align:right;"> 0.373 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0.007 </td>
+   <td style="text-align:left;"> Preprocessor1_Model008 </td>
   </tr>
 </tbody>
 </table>
@@ -410,23 +417,23 @@ log_lasso_cv <- workflow_lasso %>%
 <tbody>
   <tr>
    <td style="text-align:left;"> Accuracy </td>
-   <td style="text-align:right;"> 0.822 </td>
+   <td style="text-align:right;"> 0.820 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Precision </td>
-   <td style="text-align:right;"> 0.834 </td>
+   <td style="text-align:right;"> 0.833 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Area Under the Curve </td>
-   <td style="text-align:right;"> 0.501 </td>
+   <td style="text-align:right;"> 0.507 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Sensitivity </td>
-   <td style="text-align:right;"> 0.982 </td>
+   <td style="text-align:right;"> 0.981 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Specificity </td>
-   <td style="text-align:right;"> 0.022 </td>
+   <td style="text-align:right;"> 0.014 </td>
   </tr>
 </tbody>
 </table>
@@ -497,19 +504,19 @@ cv_logistic <- workflow_logistic %>%
   </tr>
   <tr>
    <td style="text-align:left;"> Precision </td>
-   <td style="text-align:right;"> 0.834 </td>
+   <td style="text-align:right;"> 0.832 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Area Under the Curve </td>
-   <td style="text-align:right;"> 0.500 </td>
+   <td style="text-align:right;"> 0.509 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Sensitivity </td>
-   <td style="text-align:right;"> 0.971 </td>
+   <td style="text-align:right;"> 0.973 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Specificity </td>
-   <td style="text-align:right;"> 0.030 </td>
+   <td style="text-align:right;"> 0.020 </td>
   </tr>
 </tbody>
 </table>
@@ -581,9 +588,84 @@ draw_confusion_matrix(random_forest_results)
 
 # Results
 
+```r
+# Finding Lasso Accuracy
+# lasso_cv_acc <- workflow_lasso %>% 
+#                 tune_grid(
+#                   resamples = folds,
+#                   grid = lambdas,
+#                   metrics = metric_set(accuracy)
+#                 )
+# 
+# lasso_grid <- tune_grid(
+#   workflow_lasso %>%
+#   tune_grid(
+#     resamples = folds,
+#     grid = lambdas
+#   )
+# )
 
+comparing_acc_table = data.frame(
+  c("Naive Bayes",
+    "Lasso",
+    "Logistic Lasso",
+    "Logistic",
+    "Random Forest"),
+  c(naive_bayes_results[["overall"]][["Accuracy"]],
+    # lasso_results$Mean[1],
+    0,
+    log_lasso_cv_results$Mean[1],
+    log_reg_results$Mean[1],
+    random_forest_results[["overall"]][["Accuracy"]])
+)
+names(comparing_acc_table) = c("Methods","Accuracy")
+kable(comparing_acc_table, digits = 3) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
 
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Methods </th>
+   <th style="text-align:right;"> Accuracy </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Naive Bayes </td>
+   <td style="text-align:right;"> 0.788 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lasso </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Logistic Lasso </td>
+   <td style="text-align:right;"> 0.820 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Logistic </td>
+   <td style="text-align:right;"> 0.814 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Random Forest </td>
+   <td style="text-align:right;"> 0.847 </td>
+  </tr>
+</tbody>
+</table>
 
+```r
+beepr::beep(sound = 3)
+```
+
+Methods
+Naive Bayes
+Lasso
+Logistic Lasso
+Logistic
+Random Forest
+
+Accuracy
 
 
 

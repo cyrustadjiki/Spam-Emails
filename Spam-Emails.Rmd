@@ -18,13 +18,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 These are just some notes for me...  
-- Change up axis on log_lasso plot    
 - Add more color to Confusion Matrix   
 - Confirm we want to keep our seed the same for logreg  
-- Random Forrest CM  
 - Random Name Generator  
 - Accuracy for Lasso  
 - Add URL to data and compare accuracy  
+- Have a way to glimpse at data
 
 ## Loading Data
 ```{r}
@@ -80,7 +79,10 @@ email_corpus <- tm_map( email_corpus,
 
 # OPTIONAL -- Removing two most frequent stopwords: "NUMBER", "URL"
  email_corpus <- tm_map( email_corpus,
-                        removeWords, c("NUMBER", "number", "url", "URL") )
+ removeWords, c("NUMBER", "number", "url", "URL") )
+# Testing keeping URL
+ # email_corpus <- tm_map( email_corpus,
+                        # removeWords, c("NUMBER", "number") )
 
 # OPTIONAL -- Removing extra white space
 # email_corpus <- tm_map( email_corpus,
@@ -601,20 +603,20 @@ draw_confusion_matrix(random_forest_results)
 # Results
 ```{r}
 # Finding Lasso Accuracy
-lasso_cv_acc <- workflow_lasso %>% 
-                tune_grid(
-                  resamples = folds,
-                  grid = lambdas,
-                  metrics = metric_set(accuracy)
-                )
-
-lasso_grid <- tune_grid(
-  workflow_lasso %>%
-  tune_grid(
-    resamples = folds,
-    grid = lambdas
-  )
-)
+# lasso_cv_acc <- workflow_lasso %>% 
+#                 tune_grid(
+#                   resamples = folds,
+#                   grid = lambdas,
+#                   metrics = metric_set(accuracy)
+#                 )
+# 
+# lasso_grid <- tune_grid(
+#   workflow_lasso %>%
+#   tune_grid(
+#     resamples = folds,
+#     grid = lambdas
+#   )
+# )
 
 comparing_acc_table = data.frame(
   c("Naive Bayes",
@@ -632,6 +634,7 @@ comparing_acc_table = data.frame(
 names(comparing_acc_table) = c("Methods","Accuracy")
 kable(comparing_acc_table, digits = 3) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+beepr::beep(sound = 3)
 ```
 
 Methods
