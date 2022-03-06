@@ -1,0 +1,37 @@
+---
+title: "Title for Later"
+author: "Octavio Lima, Zoë Arnaut, Cyrus Tadjiki"
+output: 
+  xaringan::moon_reader:
+          css: [default, metropolis, metropolis-fonts] 
+          lib_dir: libs
+          nature:
+            highlightStyle: github
+            highlightLines: true 
+            highlightSpans: true
+            countIncrementalSlides: false
+            keep_md: true
+---
+--- 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Predicting if an email is a spam email
+ - People don't like spam
+ - Other bullets
+---
+ 
+# Data
+
+ - We got data from here...
+---
+
+# Methods
+
+ - Naive Bayes  
+ - Lasso  
+ - Logistic Lasso
+ - Logistic
+ - Random Forest
+
