@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # setwd("/Users/octavioelias/Documents/econ524/ec524_project/project/")
 ```
 
-## Data
+# Data
 ```{r, , class.source = 'fold-show'}
 # Loading email data set: consists of "text data" and "dummy variable"
 email_df <- data.table::fread( "spam_or_not_spam.csv", header = T )
@@ -30,7 +30,7 @@ email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
 email_df$label <- factor( email_df$label )
 ```
 
-## Loading Packages
+## Packages Used
 ```{r, class.source = 'fold-show'}
 
 library(pacman)
