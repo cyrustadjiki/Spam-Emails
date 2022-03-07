@@ -16,7 +16,7 @@ output:
 
 
 
-## Data
+# Data
 
 ```{.r .fold-show}
 # Loading email data set: consists of "text data" and "dummy variable"
@@ -28,7 +28,7 @@ email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
 email_df$label <- factor( email_df$label )
 ```
 
-## Loading Packages
+## Packages Used
 
 ```{.r .fold-show}
 library(pacman)
@@ -395,7 +395,7 @@ lasso_cv <- workflow_lasso %>%
 
 ### Lasso Results
 
-```{.r .fold-show}
+```r
 # Find best models            ( source: juliasilge.com/blog/lasso-the-office/ )
 lasso_cv %>% collect_metrics() %>%
             ggplot(aes(penalty, mean, color = .metric)) +
@@ -412,15 +412,9 @@ lasso_cv %>% collect_metrics() %>%
             scale_x_log10()
 ```
 
-```
-## Warning: Transformation introduced infinite values in continuous x-axis
-
-## Warning: Transformation introduced infinite values in continuous x-axis
-```
-
 ![](Spam-Emails_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
-```{.r .fold-show}
+```r
 best_lasso_mae = lasso_cv %>% show_best(metric = "mae") %>% filter(penalty == min(penalty))
 best_lasso_rmse = lasso_cv %>% show_best(metric = "rmse") %>% filter(penalty == min(penalty))
 best_lasso = rbind(best_lasso_mae, best_lasso_rmse)
@@ -789,7 +783,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Sensitivity"]],
-    NA,
+    0,
     log_lasso_cv_results$Mean[4],
     log_reg_results$Mean[4],
     random_forest_results[["byClass"]][["Sensitivity"]]
@@ -797,7 +791,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Specificity"]],
-    NA,
+    1,
     log_lasso_cv_results$Mean[5],
     log_reg_results$Mean[5],
     random_forest_results[["byClass"]][["Specificity"]]
@@ -829,8 +823,8 @@ kable(comparing_acc_table, digits = 3) %>%
   <tr>
    <td style="text-align:left;"> Lasso </td>
    <td style="text-align:right;"> 0.848 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 1.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Logistic Lasso </td>
