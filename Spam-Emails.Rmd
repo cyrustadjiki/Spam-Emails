@@ -10,6 +10,7 @@ output:
     toc_depth: 4
     toc_float: yes
     keep_md: true
+    code_folding: hide
 # themes include default, cerulean, journal, flatly, darkly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti. Pass null for no theme
 ---
 
@@ -18,21 +19,19 @@ knitr::opts_chunk$set(echo = TRUE)
 # setwd("/Users/octavioelias/Documents/econ524/ec524_project/project/")
 ```
 
-## Loading Data
-```{r}
-
-# Loading email dataset: consists of "text data" and "dummy variable"
+## Data
+```{r, , class.source = 'fold-show'}
+# Loading email data set: consists of "text data" and "dummy variable"
 email_df <- data.table::fread( "spam_or_not_spam.csv", header = T )
 # Randomizing data
 set.seed(46234)
 email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
 # Factoring dummy variable
 email_df$label <- factor( email_df$label )
-
 ```
 
 ## Loading Packages
-```{r}
+```{r, class.source = 'fold-show'}
 
 library(pacman)
 p_load(fastverse, magrittr, here, skimr, dplyr, 
@@ -54,7 +53,7 @@ To retrieve the root of a word (eg, doing -> do), options are "stemming" &"lemma
 
 `VectorSource()`: creates one document for each email   
 `Vcorpus()`:      creates a volatile corpus from these individual emails
-```{r}
+```{r, class.source = 'fold-show'}
 
 email_corpus <- VCorpus(
                   VectorSource(
@@ -93,14 +92,12 @@ email_dtm <- tm::DocumentTermMatrix( sample( email_corpus, length( email_corpus 
                             
 
 ## Preprocessed Data for Visualization
-```{r}
-
+```{r, class.source = 'fold-show'}
 reverse_email <- data.frame(
                 text = sapply( email_corpus, as.character ), 
                 stringsAsFactors = FALSE, 
                 type = email_df$label
                 )
-
 ```
 ## Most Frequent Words in Data  
 Visualing text data after cleaning and pre-processing
@@ -145,15 +142,13 @@ wordcloud( ham$text,
 ## Splitting Data
 
 ### Data is sorted randomly, so it's easy to split Testing vs. Training
-```{r}
-
+```{r, class.source = 'fold-show'}
 email_dtm_train <- email_dtm[   1:2400, ]         # 80% training
 email_dtm_test  <- email_dtm[2401:3000, ]         # 20% testing
 
 # Adding labels for convenience
 email_train_label <- email_df[   1:2400, ]$label
 email_test_label  <- email_df[2401:3000, ]$label
-
 ```
 
 ### Checking that data is split proportionally
@@ -175,16 +170,14 @@ kable(prop_table, digits = 3) %>%
 We currently have 25,050 variables (too many!)  
 Defining threshold (eg. 1 == 1%)
 Goal: Eliminate words that appear in __% of records in the training data
-```{r}
-
+```{r, class.source = 'fold-show'}
 min_freq <- round( email_dtm$nrow * ( ( threshold = 10.0 ) / 100 ),     # using 10%
                0 
-              ) 
-
+              )
 ```
 
 ## Create vector of most frequent words
-```{r}
+```{r, class.source = 'fold-show'}
 
 freq_words <- findFreqTerms( x = email_dtm, 
                              lowfreq = min_freq )
@@ -197,7 +190,7 @@ email_dtm_freq_test  <- email_dtm_test[ , freq_words]
 
 
 ## Final, cleaned, prepared dataset
-```{r}
+```{r, class.source = 'fold-show'}
 
 # Simple dummy transformation fn.
 convert_values <- function(x){
@@ -225,7 +218,7 @@ glimpse(email_train)
 ```
 
 # Methods
-```{r, echo=FALSE}
+```{r}
 
 # I got all of this code from stackoverflow by doing some simple googling for how to display a confusion matrix
 ## Source https://stackoverflow.com/questions/23891140/r-how-to-visualize-confusion-matrix-using-the-caret-package
@@ -288,7 +281,7 @@ draw_confusion_matrix <- function(cm) {
 
 
 ## Naive Bayes
-```{r}
+```{r, class.source = 'fold-show'}
 
 #Create model from the training dataset
 bayes_classifier <- e1071::naiveBayes( email_train, 
@@ -310,7 +303,7 @@ email_train_label_rf = email_train_label
 ```
 
 ### Naive Bayes Results
-```{r, echo=FALSE}
+```{r, class.source = 'fold-show'}
 
 # Display results
 naive_bayes_results = confusionMatrix( data = email_test_pred, 
@@ -323,7 +316,7 @@ draw_confusion_matrix(naive_bayes_results)
 ```
 
 ## Lasso
-```{r, echo=FALSE}
+```{r, class.source = 'fold-show'}
 
 # Removing scientific notation
 options(scipen = 99999)
@@ -387,7 +380,7 @@ lasso_cv <- workflow_lasso %>%
 ```
 
 ### Lasso Results
-```{r, echo=FALSE}
+```{r, warning=FALSE}
 # Find best models            ( source: juliasilge.com/blog/lasso-the-office/ )
 lasso_cv %>% collect_metrics() %>%
             ggplot(aes(penalty, mean, color = .metric)) +
@@ -442,7 +435,7 @@ acc = sum(email_test_clean$accurate) / nrow(email_test_clean)
 
 
 ## Logistic Lasso
-```{r}
+```{r, class.source = 'fold-show'}
 # Set seed
 set.seed(9753)
 # converting outcome variable into character vector
@@ -489,7 +482,7 @@ log_lasso_cv <- workflow_lasso %>%
 ```
 
 ### Logistic Lasso Results
-```{r, echo=FALSE}
+```{r}
 # Find best models            ( source: juliasilge.com/blog/lasso-the-office/ )
 # log_lasso_cv %>% collect_metrics() %>% arrange(mean) %>%
 #                 ggplot(aes(penalty, mean, color = .metric)) +
@@ -521,7 +514,7 @@ kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive
 
 
 ## Logistic 
-```{r}
+```{r, class.source = 'fold-show'}
 # set.seed(9754)
 set.seed(9753)
 # converting outcome variable into character vector
@@ -561,7 +554,7 @@ cv_logistic <- workflow_logistic %>%
 ```
 
 ### Logistic Regression Results
-```{r, echo=FALSE}
+```{r}
 # Visualizing output
 log_reg_results = cv_logistic %>% collect_metrics() %>% 
       select(.metric, mean)
@@ -576,7 +569,7 @@ kable(log_reg_results, digits = 3) %>%
 ```
 
 ## Random Forests
-```{r}
+```{r, class.source = 'fold-show'}
 random_forest <- train(
                   x = email_train_rf,
                   y = email_train_label_rf,
