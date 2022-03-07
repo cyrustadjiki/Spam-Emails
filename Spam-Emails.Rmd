@@ -643,7 +643,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Sensitivity"]],
-    NA,
+    0,
     log_lasso_cv_results$Mean[4],
     log_reg_results$Mean[4],
     random_forest_results[["byClass"]][["Sensitivity"]]
@@ -651,7 +651,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Specificity"]],
-    NA,
+    1,
     log_lasso_cv_results$Mean[5],
     log_reg_results$Mean[5],
     random_forest_results[["byClass"]][["Specificity"]]
