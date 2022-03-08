@@ -16,7 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("/Users/zoearnaut-hull/EC424/group")
+# setwd("/Users/zoearnaut-hull/EC424/group")
 ```
 
 # Data
@@ -327,7 +327,7 @@ email_train_label_rf = email_train_label
 # Display results
 naive_bayes_results = confusionMatrix( data = email_test_pred, 
                                        reference = email_test_label,
-                                       positive = "1", 
+                                       positive = "0", 
                                        dnn = c("Prediction", "Actual") )
 
 draw_confusion_matrix(naive_bayes_results)
@@ -638,7 +638,10 @@ email_test <- cbind( email_test,
 predictions <- predict(random_forest, email_test)
 
 # View test metrics in confusion matrix
-random_forest_results = confusionMatrix(predictions, email_test_label)
+random_forest_results = confusionMatrix( data = predictions, 
+                         reference = email_test_label,
+                         positive = "1", 
+                         dnn = c("Prediction", "Actual") )
 draw_confusion_matrix(random_forest_results)
 
 ```
@@ -666,7 +669,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Sensitivity"]],
-    0,
+    sens,
     log_lasso_cv_results$Mean[4],
     log_reg_results$Mean[4],
     random_forest_results[["byClass"]][["Sensitivity"]]
@@ -674,15 +677,24 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Specificity"]],
-    1,
+    spec,
     log_lasso_cv_results$Mean[5],
     log_reg_results$Mean[5],
     random_forest_results[["byClass"]][["Specificity"]]
+  ),
+  
+  c(
+    naive_bayes_results[["byClass"]][["Precision"]],
+    # ifelse((tp/(fp+tp))) == NaN, 0, (tp/(fp+tp)),
+    0, #hardcoded
+    log_lasso_cv_results$Mean[2],
+    log_reg_results$Mean[2],
+    random_forest_results[["byClass"]][["Precision"]]
   )
   
 )
 
-names(comparing_acc_table) = c("Method", "Accuracy", "Sensitivity", "Specificity")
+names(comparing_acc_table) = c("Method", "Accuracy", "Sensitivity", "Specificity", "Precision")
 
 # View table
 kable(comparing_acc_table, digits = 3) %>% 
