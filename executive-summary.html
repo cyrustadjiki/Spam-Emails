@@ -351,13 +351,13 @@ pre code {
 <center>
 <div id="executive-summary" class="section level4">
 <h4>EXECUTIVE SUMMARY</h4>
-<p><strong>Identifying Spam Emails from Word Frequencies</strong></p>
+<p><strong>Predicting Spam Emails based on Word Frequencies</strong></p>
 <p>Zoë Arnaut, Octavio De Lima, Cyrus Tadjiki</p>
 </center>
 <div class="line-block"><br />
 </div>
 <p><strong>ABSTRACT</strong></p>
-<p>Predicting spam messages is a machine learning algorithm that most email providers need to include to protect their users. Five classification methods are used to identify spam emails from non-spam using word frequency. ___ proves to be the most reliable and accurate method.</p>
+<p>Predicting spam messages is a machine learning algorithm that most email providers need to include to protect their users. Five classification methods are used to identify spam emails from non-spam using word frequency. Logistic lasso regression proves to be the most reliable and accurate method.</p>
 <div class="line-block"><br />
 </div>
 <p><strong>INTRODUCTION</strong></p>
@@ -365,7 +365,7 @@ pre code {
 <div class="line-block"><br />
 </div>
 <p><strong>DATA</strong></p>
-<p>The “Spam Mails Dataset” is publicly available on Kaggle and contains the modified text of 500 spam emails and 2,500 non-spam emails (Garne, 2019). Data cleaning was conducted using a guide by Shreyas Khades (n.d.), and the steps included stemming (retrieving the root of a word), removing common stop words (such as “the” and “to”), and creating predictor variables of word frequencies. One disadvantage of the data was the number of spam emails that were either empty or in a different language, which had to be excluded and changed the ratio between spam and non-spam.</p>
+<p>The “Spam Mails Dataset” is publicly available on Kaggle and contains the modified text of 500 spam emails and 2,500 non-spam emails (Garne, 2019). Data cleaning was conducted using a guide by Shreyas Khades (n.d.), and the steps included stemming (retrieving the root of a word), removing common stop words (such as “the” and “to”), and creating predictor variables of word frequencies. One disadvantage of the data was the number of spam emails that were either empty or in a different language, which changed the ratio between spam and non-spam emails we were able to use.</p>
 <div class="line-block"><br />
 </div>
 <p><strong>METHODS</strong></p>
@@ -373,7 +373,7 @@ pre code {
 <div class="line-block"><br />
 </div>
 <p><strong>RESULTS AND CONCLUSIONS</strong></p>
-<p>The crucial metrics in the spam email context are test accuracy (ACC) and sensitivity (SENS). ACC can help determine whether a model is performing well, but it is not the only measure of a good predictor. SENS is key because clicking on spam is dangerous, so a spam email that is predicted not-spam (a false negative) has consequences. Naive Bayes produced a test ACC of 0.788 and a SENS of 0.044. Lasso regression produces an ACC of 0.848 and a SENS of 0. Logistic lasso returns 0.809 ACC and 0.967 SENS. Logistic regression returns 0.797 ACC and 0.947 SENS. Finally, the random forest returns 0.847 ACC and 0.998 SENS. While each model has its advantages and disadvantages, balancing test accuracy and sensitivity, ____ is the best predictor of spam.</p>
+<p>The crucial metrics in the spam email context are test accuracy (ACC) and sensitivity (SENS). ACC can help determine whether a model is performing well, but it is not the only measure of a good predictor. SENS is key because clicking on spam is dangerous, so a spam email that is predicted not-spam (a false negative) has consequences. Naive Bayes produced a test ACC of 0.788 and a SENS of 0.04. Lasso regression produces an ACC of 0.848 and a SENS of 0. Logistic lasso returns 0.809 ACC and 0.967 SENS. Logistic regression returns 0.797 ACC and 0.947 SENS. Finally, the random forest returns 0.847 ACC and 0 SENS. While each model has its advantages and disadvantages, balancing test accuracy and sensitivity, logistic lasso is the best predictor of spam.</p>
 <div class="line-block"><br />
 </div>
 <p><strong>SOURCES CITED</strong></p>
