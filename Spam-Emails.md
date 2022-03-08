@@ -1049,7 +1049,10 @@ email_test <- cbind( email_test,
 predictions <- predict(random_forest, email_test)
 
 # View test metrics in confusion matrix
-random_forest_results = confusionMatrix(predictions, email_test_label)
+random_forest_results = confusionMatrix( data = predictions, 
+                         reference = email_test_label,
+                         positive = "1", 
+                         dnn = c("Prediction", "Actual") )
 draw_confusion_matrix(random_forest_results)
 ```
 
@@ -1079,7 +1082,7 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Sensitivity"]],
-    0,
+    sens,
     log_lasso_cv_results$Mean[4],
     log_reg_results$Mean[4],
     random_forest_results[["byClass"]][["Sensitivity"]]
@@ -1087,15 +1090,24 @@ comparing_acc_table = data.frame(
   
   c(
     naive_bayes_results[["byClass"]][["Specificity"]],
-    1,
+    spec,
     log_lasso_cv_results$Mean[5],
     log_reg_results$Mean[5],
     random_forest_results[["byClass"]][["Specificity"]]
+  ),
+  
+  c(
+    naive_bayes_results[["byClass"]][["Precision"]],
+    # ifelse((tp/(fp+tp))) == NaN, 0, (tp/(fp+tp)),
+    0, #hardcoded
+    log_lasso_cv_results$Mean[2],
+    log_reg_results$Mean[2],
+    random_forest_results[["byClass"]][["Precision"]]
   )
   
 )
 
-names(comparing_acc_table) = c("Method", "Accuracy", "Sensitivity", "Specificity")
+names(comparing_acc_table) = c("Method", "Accuracy", "Sensitivity", "Specificity", "Precision")
 
 # View table
 kable(comparing_acc_table, digits = 3) %>% 
@@ -1109,6 +1121,7 @@ kable(comparing_acc_table, digits = 3) %>%
    <th style="text-align:right;"> Accuracy </th>
    <th style="text-align:right;"> Sensitivity </th>
    <th style="text-align:right;"> Specificity </th>
+   <th style="text-align:right;"> Precision </th>
   </tr>
  </thead>
 <tbody>
@@ -1117,28 +1130,33 @@ kable(comparing_acc_table, digits = 3) %>%
    <td style="text-align:right;"> 0.788 </td>
    <td style="text-align:right;"> 0.044 </td>
    <td style="text-align:right;"> 0.921 </td>
+   <td style="text-align:right;"> 0.091 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Lasso </td>
    <td style="text-align:right;"> 0.848 </td>
    <td style="text-align:right;"> 0.000 </td>
    <td style="text-align:right;"> 1.000 </td>
+   <td style="text-align:right;"> 0.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Logistic Lasso </td>
    <td style="text-align:right;"> 0.809 </td>
    <td style="text-align:right;"> 0.967 </td>
    <td style="text-align:right;"> 0.040 </td>
+   <td style="text-align:right;"> 0.831 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Logistic </td>
    <td style="text-align:right;"> 0.797 </td>
    <td style="text-align:right;"> 0.947 </td>
    <td style="text-align:right;"> 0.071 </td>
+   <td style="text-align:right;"> 0.832 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Random Forest </td>
    <td style="text-align:right;"> 0.847 </td>
+   <td style="text-align:right;"> 0.000 </td>
    <td style="text-align:right;"> 0.998 </td>
    <td style="text-align:right;"> 0.000 </td>
   </tr>

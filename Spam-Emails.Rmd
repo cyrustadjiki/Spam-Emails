@@ -18,6 +18,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 # setwd("/Users/zoearnaut-hull/EC424/group")
 ```
+# Abstract
+Predicting spam messages is a machine learning algorithm that most email providers need to include to protect their users. Five classification methods are used to identify spam emails from non-spam using word frequency. Logistic lasso regression proves to be the most reliable and accurate method.
 
 # Data
 From [Kaggle](https://www.kaggle.com/venky73/spam-mails-dataset)
@@ -32,6 +34,11 @@ email_df <- email_df[ sample( 1:nrow( email_df ) ),  ]
 # Factoring dummy variable
 email_df$label <- factor( email_df$label )
 ```
+## Raw Data
+```{r rawdata}
+datatable(email_df, rownames = TRUE, filter="top", options = list(pageLength = 5, scrollX=T) )
+```
+
 
 ## Packages used
 ```{r packages, class.source = 'fold-show', warning = FALSE, message = FALSE}
@@ -327,7 +334,7 @@ email_train_label_rf = email_train_label
 # Display results
 naive_bayes_results = confusionMatrix( data = email_test_pred, 
                                        reference = email_test_label,
-                                       positive = "0", 
+                                       positive = "1", 
                                        dnn = c("Prediction", "Actual") )
 
 draw_confusion_matrix(naive_bayes_results)
