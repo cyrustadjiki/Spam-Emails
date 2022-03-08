@@ -52,10 +52,16 @@ The crucial metrics in the spam email context are test accuracy (ACC) and sensit
 
 **SOURCES CITED** 
 
-| Chu, Mike. (n.d.) “What happens if you open spam email? 4 dangers to your account” DataOverhaulers. Retrieved from 
+| Chu, M. (n.d.) “What happens if you open spam email? 4 dangers to your account.” DataOverhaulers. Retrieved from 
 |     https://dataoverhaulers.com/open-spam-email/. 
 |
-| Garne, Venkatesh. (2019). Spam Mails Dataset [Data set]. Kaggle. Retrieved from https://www.kaggle.com/venky73/spam-mails-dataset/. 
+| Cybernetic. [username] (2017 Mar. 22). "R how to visualize confusion matrix using the caret package." StackOverflow. Retrieved from 
+|     https://stackoverflow.com/questions/23891140/r-how-to-visualize-confusion-matrix-using-the-caret-package.
 |
-| Khadse, Shreyas. (n.d.) “Spam/ham test SMS classification using Naive Bayes in R.” RPubs by RStudio. 
+| Garne, V. (2019). Spam Mails Dataset [Data set]. Kaggle. Retrieved from https://www.kaggle.com/venky73/spam-mails-dataset/. 
+|
+| Khadse, S. (n.d.) “Spam/ham test SMS classification using Naive Bayes in R.” RPubs by RStudio. 
 |     https://rpubs.com/shreyaskhadse/spam_ham_naive_bayes. 
+|
+| Silge, J. (2020 Mar. 17). "LASSO regression using tidymodels and #TidyTuesday data for The Office." Julia Silge. Retrieved from 
+|     https://juliasilge.com/blog/lasso-the-office/.
