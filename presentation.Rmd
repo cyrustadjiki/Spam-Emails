@@ -1,5 +1,5 @@
 ---
-title: "Title for Later"
+title: "Predicting Spam Emails based on Word Frequencies"
 author: "Octavio Lima, Zoë Arnaut, Cyrus Tadjiki"
 output: 
   xaringan::moon_reader:
@@ -12,26 +12,34 @@ output:
             countIncrementalSlides: false
             keep_md: true
 ---
---- 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Predicting if an email is a spam email
+# Intro
+
  - People don't like spam
  - Other bullets
 ---
  
-# Data
+# Data and Methods
 
- - We got data from here...
----
-
-# Methods
+ - We got data on [Kaggle](https://www.kaggle.com/venky73/spam-mails-dataset)
+ - Text of 500 spam emails and 2,500 non-spam emails
+ - Stemming (retrieving the root of a word)
+ - Removing common stop words (such as “the” and “to”)
+ 
+ 
+ - Show Word Cloud of spam and non-spam
+ - Keep it short
 
  - Naive Bayes  
  - Lasso  
  - Logistic Lasso
  - Logistic
  - Random Forest
+---
+
+# Results
+
 
