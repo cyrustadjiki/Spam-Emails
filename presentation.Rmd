@@ -34,16 +34,20 @@ knitr::opts_chunk$set(echo = FALSE)
  
 ---
  
-# Data and Methods
+# Data
 
  - We got data on [Kaggle](https://www.kaggle.com/venky73/spam-mails-dataset)
  - Text of 500 spam emails and 2,500 non-spam emails
  - Stemming (retrieving the root of a word)
  - Removing common stop words (such as “the” and “to”)
  
- 
- - Show Word Cloud of spam and non-spam
- - Keep it short
+```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE}
+library(knitr)
+include_graphics(c("nonspam_wordcloud.jpeg", "spam_wordcloud.jpeg"))
+```
+---
+
+#  Methods
 
  - Naive Bayes  
  - Lasso  
@@ -53,3 +57,4 @@ knitr::opts_chunk$set(echo = FALSE)
 ---
 
 # Results
+![output table](libs/output_table.png)
