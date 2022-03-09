@@ -1,5 +1,5 @@
 ---
-title: "Predicting Spam Emails based on Word Frequencies"
+title: "Predicting Spam Emails"
 author: "Cyrus Tadjiki, Zoë Arnaut, Octavio Lima"
 date: "March 9th 2022"
 output: 
@@ -16,7 +16,12 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("/Users/zoearnaut-hull/EC424/group")
+```
+
+```{css, echo=FALSE}
+h1, h4 {
+  text-align: center;
+}
 ```
 # Abstract
 Predicting spam messages is a machine learning algorithm that most email providers need to include to protect their users. Five classification methods are used to identify spam emails from non-spam using word frequency. Logistic lasso regression proves to be the most reliable and accurate method.
@@ -48,6 +53,7 @@ email_df2 = data.frame(
   "Raw Email Text" = email_df$email
   )
 datatable(email_df2, rownames = TRUE, filter="top", options = list(pageLength = 10, scrollX=T) )
+# datatable(..., class = 'white-space: nowrap')
 ```
 
 
@@ -112,7 +118,7 @@ email_dtm <- tm::DocumentTermMatrix( sample( email_corpus, length( email_corpus 
 
 ## Visualizations
 Using `wordclouds`, visualize text data after cleaning and pre-processing
-```{r visual_data, class.source = 'fold-show'}
+```{r visual_data}
 # Preprocessed data for visualizations
 reverse_email <- data.frame(
                 text = sapply( email_corpus, as.character ), 
@@ -227,12 +233,14 @@ freq_words_dt = data.frame(
   c(freq_words_plus_1[seq(11*16+1,16*12)]),
   c(freq_words_plus_1[seq(12*16+1,16*13)])
 )
-
+names(freq_words_dt)[] = ""
 # View table
-kable(freq_words_dt, digits = 3, col.names = NULL) %>% 
+kable(freq_words_dt, digits = 3) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% 
   column_spec (1:13,border_left = T, border_right = T) %>% 
-  row_spec(1:16, extra_css = "border-bottom: 1px solid")
+  row_spec(1:16, extra_css = c("border-bottom: 1px solid", 
+                               "border-top: 1px solid")) %>% 
+  add_header_above()
 ```
 
 
