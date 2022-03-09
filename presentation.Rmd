@@ -12,14 +12,26 @@ output:
             countIncrementalSlides: false
             keep_md: true
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Intro
+# Introduction
+- Spam messages are annoying but also invasive
 
- - People don't like spam
- - Other bullets
+- An open spam email can transmit personal and computer information to a spammer, including:
+  - your IP address
+  - your location
+  - your device type
+  - your operating system
+  - your place of work
+  - and more...
+  
+- Email providers use machine algorithms to screen messages and protect their users, which is what we will be attempting to do
+
+- **Research Question:** What type of model predicts spam emails using word frequencies the best?
+ 
 ---
  
 # Data and Methods
@@ -41,5 +53,3 @@ knitr::opts_chunk$set(echo = FALSE)
 ---
 
 # Results
-
-

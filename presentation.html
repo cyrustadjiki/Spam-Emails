@@ -4,7 +4,6 @@
     <title>Predicting Spam Emails based on Word Frequencies</title>
     <meta charset="utf-8" />
     <meta name="author" content="Octavio Lima, Zoë Arnaut, Cyrus Tadjiki" />
-    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -20,10 +19,22 @@ class: center, middle, inverse, title-slide
 
 
 
-# Data and Methods
 
- - People don't like spam
- - Other bullets
+# Introduction
+- Spam messages are annoying but also invasive
+
+- An open spam email can transmit personal and computer information to a spammer, including:
+  - your IP address
+  - your location
+  - your device type
+  - your operating system
+  - your place of work
+  - and more...
+  
+- Email providers use machine algorithms to screen messages and protect their users, which is what we will be attempting to do
+
+- **Research Question:** What type of model predicts spam emails using word frequencies the best?
+ 
 ---
  
 # Data and Methods
@@ -32,7 +43,6 @@ class: center, middle, inverse, title-slide
  - Text of 500 spam emails and 2,500 non-spam emails
  - Stemming (retrieving the root of a word)
  - Removing common stop words (such as “the” and “to”)
- - One disadvantage of the data was the number of spam emails that were either empty or in a different language, which changed the ratio between spam and non-spam emails we were able to use.
  
  
  - Show Word Cloud of spam and non-spam
@@ -46,8 +56,6 @@ class: center, middle, inverse, title-slide
 ---
 
 # Results
-
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
