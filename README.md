@@ -1,8 +1,8 @@
 # Spam-Emails
 
-## [Final Version](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/Spam-Emails.html)
-## [Executive Summary](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/executive-summary.html)
-## [Presentation Slides](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/presentation.html)
+## [Final Version](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/R/Spam-Emails.html)
+## [Executive Summary](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/R/executive-summary.html)
+## [Presentation Slides](https://raw.githack.com/cyrustadjiki/Spam-Emails/master/R/presentation.html)
 
 **DUE DATE:** March 9, 2022
 
