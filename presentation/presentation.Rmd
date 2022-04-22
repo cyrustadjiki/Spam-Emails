@@ -57,4 +57,4 @@ include_graphics(c("nonspam_wordcloud.jpeg", "spam_wordcloud.jpeg"))
 ---
 
 # Results
-![output table](libs/output_table.png)
+![output table](output_table.png)
